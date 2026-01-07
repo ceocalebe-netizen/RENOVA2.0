@@ -30,7 +30,7 @@ export default function ClientList() {
             const { data: { user } } = await supabase.auth.getUser();
 
             if (!user) {
-                setError('User not authenticated');
+                setError('Usuário não autenticado');
                 setLoading(false);
                 return;
             }
@@ -56,7 +56,7 @@ export default function ClientList() {
             const { data: { user } } = await supabase.auth.getUser();
 
             if (!user) {
-                alert('You must be logged in');
+                alert('Você precisa estar logado');
                 return;
             }
 
@@ -99,7 +99,7 @@ export default function ClientList() {
     };
 
     const handleDeleteClient = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this client?')) return;
+        if (!confirm('Tem certeza que deseja excluir este cliente?')) return;
 
         try {
             const { error } = await supabase
@@ -148,7 +148,7 @@ export default function ClientList() {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-500" />
                     <input
                         type="text"
-                        placeholder="Search clients..."
+                        placeholder="Buscar clientes..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
@@ -159,7 +159,7 @@ export default function ClientList() {
                     className="flex items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-600/30"
                 >
                     <Plus className="h-5 w-5" />
-                    Add Client
+                    Novo Cliente
                 </button>
             </div>
 
@@ -176,19 +176,19 @@ export default function ClientList() {
                         <thead>
                             <tr className="bg-slate-900/50 border-b border-slate-800">
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                                    Name
+                                    Nome
                                 </th>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                                    Email
+                                    E-mail
                                 </th>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                                    Phone
+                                    Telefone
                                 </th>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                                    Company
+                                    Empresa
                                 </th>
                                 <th className="px-6 py-4 text-right text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                                    Actions
+                                    Ações
                                 </th>
                             </tr>
                         </thead>
@@ -245,7 +245,7 @@ export default function ClientList() {
                             ) : (
                                 <tr>
                                     <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
-                                        {loading ? 'Loading...' : 'No clients found'}
+                                        {loading ? 'Carregando...' : 'Nenhum cliente encontrado'}
                                     </td>
                                 </tr>
                             )}

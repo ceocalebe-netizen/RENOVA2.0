@@ -1,26 +1,26 @@
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
 const data = [
-    { month: 'Jan', revenue: 12500 },
-    { month: 'Feb', revenue: 18200 },
-    { month: 'Mar', revenue: 15800 },
-    { month: 'Apr', revenue: 22400 },
-    { month: 'May', revenue: 28900 },
-    { month: 'Jun', revenue: 31200 },
-    { month: 'Jul', revenue: 35600 },
-    { month: 'Aug', revenue: 38900 },
-    { month: 'Sep', revenue: 42300 },
-    { month: 'Oct', revenue: 45800 },
-    { month: 'Nov', revenue: 48200 },
-    { month: 'Dec', revenue: 52400 },
+    { month: 'Jan', revenue: 0 },
+    { month: 'Fev', revenue: 0 },
+    { month: 'Mar', revenue: 0 },
+    { month: 'Abr', revenue: 0 },
+    { month: 'Mai', revenue: 0 },
+    { month: 'Jun', revenue: 0 },
+    { month: 'Jul', revenue: 0 },
+    { month: 'Ago', revenue: 0 },
+    { month: 'Set', revenue: 0 },
+    { month: 'Out', revenue: 0 },
+    { month: 'Nov', revenue: 0 },
+    { month: 'Dez', revenue: 0 },
 ];
 
 export default function RevenueChart() {
     return (
         <div className="bg-slate-950 border border-slate-800 rounded-xl p-6 shadow-lg">
             <div className="mb-6">
-                <h3 className="text-lg font-semibold text-white mb-1">Revenue Overview</h3>
-                <p className="text-sm text-slate-400">Monthly revenue performance for 2024</p>
+                <h3 className="text-lg font-semibold text-white mb-1">Visão Geral da Receita</h3>
+                <p className="text-sm text-slate-400">Desempenho da receita mensal em 2024</p>
             </div>
             <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={data}>
@@ -39,7 +39,7 @@ export default function RevenueChart() {
                     <YAxis
                         stroke="#64748b"
                         style={{ fontSize: '12px' }}
-                        tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                        tickFormatter={(value) => `R$ ${(value / 1000).toFixed(0)}k`}
                     />
                     <Tooltip
                         contentStyle={{
@@ -48,7 +48,7 @@ export default function RevenueChart() {
                             borderRadius: '8px',
                             color: '#fff'
                         }}
-                        formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
+                        formatter={(value) => [`R$ ${Number(value).toLocaleString('pt-BR')}`, 'Receita']}
                     />
                     <Area
                         type="monotone"

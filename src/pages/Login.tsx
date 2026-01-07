@@ -24,7 +24,7 @@ export default function Login() {
                     password,
                 });
                 if (error) throw error;
-                setError('Success! Check your email for confirmation.');
+                setError('Sucesso! Verifique seu e-mail para confirmação.');
             } else {
                 const { error } = await supabase.auth.signInWithPassword({
                     email,
@@ -48,16 +48,16 @@ export default function Login() {
                     <div className="text-center">
                         <img src={logo} alt="Renova Logo" className="h-20 mx-auto mb-6 object-contain" />
                         <h2 className="text-3xl font-bold tracking-tight text-white">
-                            {isSignUp ? 'Create an account' : 'Welcome back'}
+                            {isSignUp ? 'Criar uma conta' : 'Bem-vindo de volta'}
                         </h2>
                         <p className="mt-2 text-sm text-slate-400">
-                            {isSignUp ? 'Enter your details to get started' : 'Please enter your details to sign in'}
+                            {isSignUp ? 'Insira seus dados para começar' : 'Por favor, insira seus dados para entrar'}
                         </p>
                     </div>
 
                     {/* Error / Success Message */}
                     {error && (
-                        <div className={`p-4 rounded-lg text-sm font-medium ${error.startsWith('Success') ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
+                        <div className={`p-4 rounded-lg text-sm font-medium ${error.startsWith('Success') || error.startsWith('Sucesso') ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
                             {error}
                         </div>
                     )}
@@ -66,7 +66,7 @@ export default function Login() {
                     <form className="mt-8 space-y-6" onSubmit={handleAuth}>
                         <div className="space-y-5">
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-1.5">Email address</label>
+                                <label className="block text-sm font-medium text-slate-300 mb-1.5">Endereço de e-mail</label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <Mail className="h-5 w-5 text-slate-500" />
@@ -75,7 +75,7 @@ export default function Login() {
                                         type="email"
                                         required
                                         className="block w-full pl-10 pr-3 py-3 border border-slate-700 rounded-xl leading-5 bg-slate-900 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all duration-200"
-                                        placeholder="broker@example.com"
+                                        placeholder="corretor@exemplo.com"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
@@ -83,7 +83,7 @@ export default function Login() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+                                <label className="block text-sm font-medium text-slate-300 mb-1.5">Senha</label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <Lock className="h-5 w-5 text-slate-500" />
@@ -107,7 +107,7 @@ export default function Login() {
                         >
                             {loading ? <Loader2 className="animate-spin h-5 w-5" /> : (
                                 <>
-                                    {isSignUp ? 'Sign Up' : 'Sign In'}
+                                    {isSignUp ? 'Cadastrar' : 'Entrar'}
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </>
                             )}
@@ -116,12 +116,12 @@ export default function Login() {
 
                     {/* Footer Toggle */}
                     <p className="mt-8 text-center text-sm text-slate-400">
-                        {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
+                        {isSignUp ? 'Já tem uma conta? ' : "Não tem uma conta? "}
                         <button
                             onClick={() => { setIsSignUp(!isSignUp); setError(null); }}
                             className="font-medium text-blue-500 hover:text-blue-400 hover:underline transition-colors"
                         >
-                            {isSignUp ? 'Sign in' : 'Sign up for free'}
+                            {isSignUp ? 'Entrar' : 'Cadastre-se grátis'}
                         </button>
                     </p>
                 </div>
@@ -143,11 +143,11 @@ export default function Login() {
                         Enterprise Grade
                     </div>
                     <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-                        The Future of <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Insurance Management</span>
+                        O Futuro da <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Gestão de Seguros</span>
                     </h1>
                     <p className="text-lg text-slate-300 leading-relaxed max-w-lg">
-                        Experience the next generation of broker tools. Streamline your workflow, manage clients efficiently, and grow your business with Renova.
+                        Experimente a próxima geração de ferramentas para corretores. Otimize seu fluxo de trabalho, gerencie clientes com eficiência e expanda seus negócios com o Renova.
                     </p>
                 </div>
             </div>
