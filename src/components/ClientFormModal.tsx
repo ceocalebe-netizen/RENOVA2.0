@@ -71,15 +71,31 @@ export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log('=== FORM SUBMIT STARTED ===');
+        console.log('FormData:', formData);
+        console.log('InitialData:', initialData);
+
         // Basic validation
-        if (!formData.name) {
+        if (!formData.name || !formData.name.trim()) {
+            console.log('VALIDATION FAILED: Nome obrigatório');
             alert('Nome é obrigatório');
-            return;
+            return; // Don't close modal if validation fails
         }
-        onSubmit(formData as Omit<Client, 'id'>);
-        onClose();
+
+        try {
+            console.log('Calling onSubmit with data...');
+            await onSubmit(formData as Omit<Client, 'id'>);
+            console.log('onSubmit completed successfully!');
+            // Only close if submission succeeds without errors
+            alert('Cliente salvo com sucesso!');
+            onClose();
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('Erro ao salvar cliente: ' + (error as any)?.message || 'Erro desconhecido');
+            // Don't close modal if there's an error
+        }
     };
 
     const handleChange = (field: keyof Client, value: any) => {
