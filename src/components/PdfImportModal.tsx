@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Upload, FileText, AlertCircle } from 'lucide-react';
 
 interface PdfImportModalProps {
@@ -78,7 +79,7 @@ export default function PdfImportModal({ isOpen, onClose, onUpload }: PdfImportM
         }
     };
 
-    return (
+    const modalContent = (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div
                 className="bg-slate-950 border border-slate-800 rounded-xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col animate-in fade-in duration-200 zoom-in-95"
@@ -204,4 +205,9 @@ export default function PdfImportModal({ isOpen, onClose, onUpload }: PdfImportM
             </div>
         </div>
     );
+
+    const modalRoot = document.getElementById('modal-root');
+    if (!modalRoot) return null;
+    
+    return createPortal(modalContent, modalRoot);
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, User, MapPin, Car, Shield } from 'lucide-react';
 
 interface Client {
@@ -59,42 +60,69 @@ type TabType = 'personal' | 'address' | 'vehicle' | 'insurance';
 export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData }: ClientFormModalProps) {
     const [activeTab, setActiveTab] = useState<TabType>('personal');
     const [formData, setFormData] = useState<Partial<Client>>({});
+    const [isInitialized, setIsInitialized] = useState(false);
 
+    // Efeito separado: Inicializa dados quando modal abre
     useEffect(() => {
-        if (initialData) {
-            setFormData(initialData);
-        } else {
+        if (isOpen && !isInitialized) {
+            console.log('📝 Inicializando modal...');
+            if (initialData) {
+                console.log('📄 Carregando dados:', initialData);
+                setFormData(initialData);
+            } else {
+                console.log('✨ Modal vazio para novo cadastro');
+                setFormData({});
+            }
+            setActiveTab('personal');
+            setIsInitialized(true);
+        }
+    }, [isOpen, initialData, isInitialized]);
+
+    // Efeito separado: Reseta estado quando modal fecha
+    useEffect(() => {
+        if (!isOpen && isInitialized) {
+            console.log('🔄 Modal fechado - resetando estado');
+            setIsInitialized(false);
+            setActiveTab('personal');
             setFormData({});
         }
-        setActiveTab('personal');
-    }, [initialData, isOpen]);
+    }, [isOpen, isInitialized]);
 
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('=== FORM SUBMIT STARTED ===');
+        e.stopPropagation();
+        
+        console.log('=== 🚀 FORM SUBMIT STARTED ===');
+        console.log('Active Tab:', activeTab);
+        console.log('Is Last Tab:', isLastTab);
         console.log('FormData:', formData);
         console.log('InitialData:', initialData);
 
-        // Basic validation
+        // PROTEÇÃO: Só permite submit se estiver na última aba
+        if (activeTab !== 'insurance') {
+            console.warn('⚠️ SUBMIT BLOQUEADO: Usuário não está na última aba (está em:', activeTab, ')');
+            alert('Por favor, navegue até a última etapa do formulário antes de salvar.');
+            return;
+        }
+
+        // Validação básica
         if (!formData.name || !formData.name.trim()) {
-            console.log('VALIDATION FAILED: Nome obrigatório');
+            console.log('❌ VALIDATION FAILED: Nome obrigatório');
             alert('Nome é obrigatório');
-            return; // Don't close modal if validation fails
+            return;
         }
 
         try {
-            console.log('Calling onSubmit with data...');
+            console.log('💾 Salvando cliente...');
             await onSubmit(formData as Omit<Client, 'id'>);
-            console.log('onSubmit completed successfully!');
-            // Only close if submission succeeds without errors
+            console.log('✅ Cliente salvo com sucesso!');
             alert('Cliente salvo com sucesso!');
             onClose();
         } catch (error) {
-            console.error('Error submitting form:', error);
+            console.error('❌ Error submitting form:', error);
             alert('Erro ao salvar cliente: ' + (error as any)?.message || 'Erro desconhecido');
-            // Don't close modal if there's an error
         }
     };
 
@@ -122,18 +150,22 @@ export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData
 
         if (direction === 'next') {
             if (currentIndex < tabs.length - 1) {
-                setActiveTab(tabs[currentIndex + 1]);
+                const nextTab = tabs[currentIndex + 1];
+                console.log(`➡️ Navegando de ${activeTab} para ${nextTab}`);
+                setActiveTab(nextTab);
             }
         } else {
             if (currentIndex > 0) {
-                setActiveTab(tabs[currentIndex - 1]);
+                const prevTab = tabs[currentIndex - 1];
+                console.log(`⬅️ Navegando de ${activeTab} para ${prevTab}`);
+                setActiveTab(prevTab);
             }
         }
     };
 
     const isLastTab = activeTab === 'insurance';
 
-    return (
+    const modalContent = (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-slate-950 border border-slate-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
                 {/* Header */}
@@ -159,7 +191,17 @@ export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData
 
                 {/* Form Content */}
                 <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-                    <form id="client-form" onSubmit={handleSubmit} className="space-y-6">
+                    <form 
+                        id="client-form" 
+                        onSubmit={handleSubmit}
+                        onKeyDown={(e) => {
+                            // Previne submit ao pressionar Enter, exceto no botão de submit
+                            if (e.key === 'Enter' && e.target instanceof HTMLInputElement && e.target.type !== 'submit') {
+                                e.preventDefault();
+                            }
+                        }}
+                        className="space-y-6"
+                    >
 
                         {activeTab === 'personal' && (
                             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -435,7 +477,11 @@ export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData
                         {activeTab !== 'personal' && (
                             <button
                                 type="button"
-                                onClick={() => toggleTab('prev')}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    toggleTab('prev');
+                                }}
                                 className="px-6 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium border border-slate-700"
                             >
                                 Voltar
@@ -453,7 +499,11 @@ export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData
                         ) : (
                             <button
                                 type="button"
-                                onClick={() => toggleTab('next')}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    toggleTab('next');
+                                }}
                                 className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-600/20 flex items-center gap-2"
                             >
                                 Próximo
@@ -464,5 +514,10 @@ export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData
             </div>
         </div>
     );
+
+    const modalRoot = document.getElementById('modal-root');
+    if (!modalRoot) return null;
+    
+    return createPortal(modalContent, modalRoot);
 }
 

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
 const data = [
@@ -16,6 +17,26 @@ const data = [
 ];
 
 export default function RevenueChart() {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    if (!isClient) {
+        return (
+            <div className="bg-slate-950 border border-slate-800 rounded-xl p-6 shadow-lg">
+                <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-white mb-1">Visão Geral da Receita</h3>
+                    <p className="text-sm text-slate-400">Desempenho da receita mensal em 2024</p>
+                </div>
+                <div className="h-[300px] flex items-center justify-center">
+                    <div className="text-slate-500">Carregando gráfico...</div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-slate-950 border border-slate-800 rounded-xl p-6 shadow-lg">
             <div className="mb-6">
