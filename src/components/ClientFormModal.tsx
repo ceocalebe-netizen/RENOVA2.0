@@ -100,6 +100,23 @@ export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData
         </button>
     );
 
+    const toggleTab = (direction: 'next' | 'prev') => {
+        const tabs: TabType[] = ['personal', 'address', 'vehicle', 'insurance'];
+        const currentIndex = tabs.indexOf(activeTab);
+
+        if (direction === 'next') {
+            if (currentIndex < tabs.length - 1) {
+                setActiveTab(tabs[currentIndex + 1]);
+            }
+        } else {
+            if (currentIndex > 0) {
+                setActiveTab(tabs[currentIndex - 1]);
+            }
+        }
+    };
+
+    const isLastTab = activeTab === 'insurance';
+
     return (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-slate-950 border border-slate-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
@@ -389,7 +406,7 @@ export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData
                 </div>
 
                 {/* Footer */}
-                <div className="p-6 border-t border-slate-800 shrink-0 flex justify-end gap-3 bg-slate-950 rounded-b-xl">
+                <div className="p-6 border-t border-slate-800 shrink-0 flex justify-between bg-slate-950 rounded-b-xl">
                     <button
                         type="button"
                         onClick={onClose}
@@ -397,15 +414,39 @@ export default function ClientFormModal({ isOpen, onClose, onSubmit, initialData
                     >
                         Cancelar
                     </button>
-                    <button
-                        type="submit"
-                        form="client-form"
-                        className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-600/20"
-                    >
-                        {initialData ? 'Salvar Alterações' : 'Criar Registro'}
-                    </button>
+
+                    <div className="flex gap-3">
+                        {activeTab !== 'personal' && (
+                            <button
+                                type="button"
+                                onClick={() => toggleTab('prev')}
+                                className="px-6 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors font-medium border border-slate-700"
+                            >
+                                Voltar
+                            </button>
+                        )}
+
+                        {isLastTab ? (
+                            <button
+                                type="submit"
+                                form="client-form"
+                                className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-600/20"
+                            >
+                                {initialData ? 'Salvar Alterações' : 'Cadastrar Cliente'}
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => toggleTab('next')}
+                                className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg shadow-blue-600/20 flex items-center gap-2"
+                            >
+                                Próximo
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
     );
 }
+
