@@ -5,7 +5,7 @@ import DashboardLayout from '../components/DashboardLayout';
 import StatsCard from '../components/StatsCard';
 import RevenueChart from '../components/RevenueChart';
 import ClientList from '../components/ClientList';
-import { DollarSign, Users, TrendingUp, FileText, Loader2 } from 'lucide-react';
+import { DollarSign, Users, TrendingUp, FileText } from 'lucide-react';
 
 
 export default function Dashboard() {
@@ -17,7 +17,6 @@ export default function Dashboard() {
         growthRate: 0
     });
     const [recentActivity, setRecentActivity] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchDashboardData();
@@ -25,8 +24,6 @@ export default function Dashboard() {
 
     const fetchDashboardData = async () => {
         try {
-            setLoading(true);
-
             // 1. Total Clients
             const { count: totalClients, error: countError } = await supabase
                 .from('clients')
@@ -81,8 +78,6 @@ export default function Dashboard() {
 
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
-        } finally {
-            setLoading(false);
         }
     };
 
